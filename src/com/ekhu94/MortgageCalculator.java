@@ -41,23 +41,22 @@ public class MortgageCalculator {
         return principal * ((monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
     }
 
+    private static double calculateBalance(double principal, double monthlyInterestRate, int months, int paymentsMade) {
+        return principal * ((Math.pow(1 + monthlyInterestRate, months) - Math.pow(1 + monthlyInterestRate, paymentsMade)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
+    }
+
     private static void printMortgage(double principal, double mortgage, double monthlyInterestRate, int months) {
-        int payments = 1;
         System.out.println("MORTGAGE");
         System.out.println("--------");
         System.out.println("Monthly Payments: " + NumberFormat.getCurrencyInstance().format(mortgage));
         System.out.println("PAYMENT SCHEDULE");
         System.out.println("----------------");
-        while (true) {
-            double balance = principal * ((Math.pow(1 + monthlyInterestRate, months) - Math.pow(1 + monthlyInterestRate, payments)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
+        for (int payments = 1; payments <= months; payments++) {
+            double balance = calculateBalance(principal, monthlyInterestRate, months, payments);
             if (balance <= 0) {
                 System.out.println(NumberFormat.getCurrencyInstance().format(0).trim());
             } else {
                 System.out.println(NumberFormat.getCurrencyInstance().format(balance).trim());
-            }
-            payments++;
-            if (payments > months) {
-                return;
             }
         }
     }
