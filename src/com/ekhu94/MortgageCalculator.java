@@ -5,7 +5,10 @@ import java.util.Scanner;
 
 public class MortgageCalculator {
 
-    public static void printMortgage() {
+    private static final int MONTHS_IN_A_YEAR = 12;
+    private static final int PERCENTAGE = 100;
+
+    public static void run() {
 
         double principal = getNumber("Principal ($1K - $1M): ", 1000, 1_000_000);
 
@@ -13,9 +16,11 @@ public class MortgageCalculator {
 
         int years = (int) getNumber("Period (Years): ", 1, 30);
 
-        double mortgage = calculateMortgage(principal, interestRate, years);
-        String result = NumberFormat.getCurrencyInstance().format(mortgage).trim();
-        System.out.println("Mortgage: " + result);
+        double monthlyInterestRate = interestRate / MONTHS_IN_A_YEAR / PERCENTAGE;
+        int months = years * MONTHS_IN_A_YEAR;
+        double mortgage = calculateMortgage(principal, monthlyInterestRate, months);
+
+        printMortgage(principal, mortgage, monthlyInterestRate, months);
     }
 
     private static double getNumber(String prompt, int min, int max) {
@@ -32,11 +37,28 @@ public class MortgageCalculator {
         return value;
     }
 
-    private static double calculateMortgage(double principal, double interestRate, int years) {
-        final int MONTHS_IN_A_YEAR = 12;
-        final int PERCENTAGE = 100;
-        int months = years * MONTHS_IN_A_YEAR;
-        double monthlyInterestRate = interestRate / MONTHS_IN_A_YEAR / PERCENTAGE;
+    private static double calculateMortgage(double principal, double monthlyInterestRate, int months) {
         return principal * ((monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
+    }
+
+    private static void printMortgage(double principal, double mortgage, double monthlyInterestRate, int months) {
+        int payments = 1;
+        System.out.println("MORTGAGE");
+        System.out.println("--------");
+        System.out.println("Monthly Payments: " + NumberFormat.getCurrencyInstance().format(mortgage));
+        System.out.println("PAYMENT SCHEDULE");
+        System.out.println("----------------");
+        while (true) {
+            double balance = principal * ((Math.pow(1 + monthlyInterestRate, months) - Math.pow(1 + monthlyInterestRate, payments)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
+            if (balance <= 0) {
+                System.out.println(NumberFormat.getCurrencyInstance().format(0).trim());
+            } else {
+                System.out.println(NumberFormat.getCurrencyInstance().format(balance).trim());
+            }
+            payments++;
+            if (payments > months) {
+                return;
+            }
+        }
     }
 }
