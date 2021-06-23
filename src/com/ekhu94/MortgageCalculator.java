@@ -1,7 +1,6 @@
 package com.ekhu94;
 
 import java.text.NumberFormat;
-import java.util.Scanner;
 
 public class MortgageCalculator {
 
@@ -10,11 +9,11 @@ public class MortgageCalculator {
 
     public static void run() {
 
-        double principal = getNumber("Principal ($1K - $1M): ", 1000, 1_000_000);
+        double principal = Console.getNumber("Principal ($1K - $1M): ", 1000, 1_000_000);
 
-        double interestRate = getNumber("Annual Interest Rate: ", 1, 30);
+        double interestRate = Console.getNumber("Annual Interest Rate: ", 1, 30);
 
-        int years = (int) getNumber("Period (Years): ", 1, 30);
+        int years = (int) Console.getNumber("Period (Years): ", 1, 30);
 
         double monthlyInterestRate = interestRate / MONTHS_IN_A_YEAR / PERCENTAGE;
         int months = years * MONTHS_IN_A_YEAR;
@@ -22,20 +21,6 @@ public class MortgageCalculator {
 
         printMortgage(mortgage);
         printPaymentSchedule(principal, monthlyInterestRate, months);
-    }
-
-    private static double getNumber(String prompt, int min, int max) {
-        Scanner scanner = new Scanner(System.in);
-        double value;
-        while (true) {
-            System.out.print(prompt);
-            value = scanner.nextDouble();
-            if (value >= min && value <= max) {
-                break;
-            }
-            System.out.println("Value should be between " + min + " and " + max + ".");
-        }
-        return value;
     }
 
     private static double calculateMortgage(double principal, double monthlyInterestRate, int months) {
