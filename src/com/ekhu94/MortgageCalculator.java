@@ -1,7 +1,5 @@
 package com.ekhu94;
 
-import java.text.NumberFormat;
-
 public class MortgageCalculator {
 
     private static final int MONTHS_IN_A_YEAR = 12;
@@ -19,30 +17,16 @@ public class MortgageCalculator {
         int months = years * MONTHS_IN_A_YEAR;
         double mortgage = calculateMortgage(principal, monthlyInterestRate, months);
 
-        printMortgage(mortgage);
-        printPaymentSchedule(principal, monthlyInterestRate, months);
+        MortgageReport.printMortgage(mortgage);
+        MortgageReport.printPaymentSchedule(principal, monthlyInterestRate, months);
     }
 
     private static double calculateMortgage(double principal, double monthlyInterestRate, int months) {
         return principal * ((monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
     }
 
-    private static double calculateBalance(double principal, double monthlyInterestRate, int months, int paymentsMade) {
+    public static double calculateBalance(double principal, double monthlyInterestRate, int months, int paymentsMade) {
         return principal * ((Math.pow(1 + monthlyInterestRate, months) - Math.pow(1 + monthlyInterestRate, paymentsMade)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
     }
 
-    private static void printMortgage(double mortgage) {
-        System.out.println("MORTGAGE");
-        System.out.println("--------");
-        System.out.println("Monthly Payments: " + NumberFormat.getCurrencyInstance().format(mortgage));
-    }
-
-    private static void printPaymentSchedule(double principal, double monthlyInterestRate, int months) {
-        System.out.println("PAYMENT SCHEDULE");
-        System.out.println("----------------");
-        for (int payments = 1; payments <= months; payments++) {
-            double balance = calculateBalance(principal, monthlyInterestRate, months, payments);
-            System.out.println(NumberFormat.getCurrencyInstance().format(balance).trim());
-        }
-    }
 }
