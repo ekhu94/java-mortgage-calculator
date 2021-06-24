@@ -2,25 +2,32 @@ package com.ekhu94;
 
 public class MortgageCalculator {
 
-    private double principal;
-    private double monthlyInterestRate;
-    private int months;
+    public static final int MONTHS_IN_A_YEAR = 12;
+    public static final int PERCENTAGE = 100;
 
-    public MortgageCalculator(double principal, double monthlyInterestRate, int months) {
+    private double principal;
+    private double annualInterestRate;
+    private int years;
+
+    public MortgageCalculator(double principal, double annualInterestRate, int years) {
         this.principal = principal;
-        this.monthlyInterestRate = monthlyInterestRate;
-        this.months = months;
+        this.annualInterestRate = annualInterestRate;
+        this.years = years;
     }
 
     public double calculateMortgage() {
-        return principal * ((monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
+        return principal * ((getMonthlyInterestRate() * Math.pow(1 + getMonthlyInterestRate(), getMonths())) / (Math.pow(1 + getMonthlyInterestRate(), getMonths()) - 1));
     }
 
     public double calculateBalance(int paymentsMade) {
-        return principal * ((Math.pow(1 + monthlyInterestRate, months) - Math.pow(1 + monthlyInterestRate, paymentsMade)) / (Math.pow(1 + monthlyInterestRate, months) - 1));
+        return principal * ((Math.pow(1 + getMonthlyInterestRate(), getMonths()) - Math.pow(1 + getMonthlyInterestRate(), paymentsMade)) / (Math.pow(1 + getMonthlyInterestRate(), getMonths()) - 1));
     }
 
     public int getMonths() {
-        return months;
+        return years * MONTHS_IN_A_YEAR;
+    }
+
+    private double getMonthlyInterestRate() {
+        return annualInterestRate / MONTHS_IN_A_YEAR / PERCENTAGE;
     }
 }
