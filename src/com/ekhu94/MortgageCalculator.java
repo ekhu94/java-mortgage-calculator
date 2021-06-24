@@ -1,5 +1,7 @@
 package com.ekhu94;
 
+import java.text.NumberFormat;
+
 public class MortgageCalculator {
 
     public static final int MONTHS_IN_A_YEAR = 12;
@@ -21,6 +23,14 @@ public class MortgageCalculator {
 
     public double calculateBalance(int paymentsMade) {
         return principal * ((Math.pow(1 + getMonthlyInterestRate(), getMonths()) - Math.pow(1 + getMonthlyInterestRate(), paymentsMade)) / (Math.pow(1 + getMonthlyInterestRate(), getMonths()) - 1));
+    }
+
+    public double[] getRemainingBalances() {
+        var balances = new double[getMonths()];
+        for (int payments = 1; payments <= getMonths(); payments++) {
+            balances[payments - 1] = calculateBalance(payments);
+        }
+        return balances;
     }
 
     public int getMonths() {
